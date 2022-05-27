@@ -9,7 +9,7 @@ listnum = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 liststr = ['-', '-', '-', '-', '-', '-', '-', '-', '-']
 listerr = ['이미 사용된 위치입니다.', '입력이 올바르지 않습니다.']
 
-AI = 0
+AI = 1
 
  #  플레이어의 기호를 지정합니다.
 num = randint(0, 1)
@@ -17,11 +17,16 @@ if num == 0:
     order = 0
     plr = 1
     opp = -1
+    plricon = 'O'
+    oppicon = 'X'
+
 
 else:
     order = 1
     plr = -1
     opp = 1
+    plricon = 'X'
+    oppicon = 'O'
 
  #  게임의 메인 코드입니다.
 
@@ -38,10 +43,12 @@ while True:  #  수로 이로어진 위치데이터를 글자로 변환합니다
         
     if order == 0:
         orderstr = '당신'
+        iconstr = plricon
     elif order == 1:
         orderstr = '상대방'
+        iconstr = oppicon
 
-    print(orderstr + '의 차례입니다.') #  현재 배치 상태를 표시합니다.
+    print(orderstr + '(' + iconstr + ')' + '의 차례입니다.') #  현재 배치 상태를 표시합니다.
     print('')
     print(' ' + str(liststr[0]) + ' | ' + str(liststr[1]) + ' | ' + str(liststr[2]))
     print('——— ——— ———')
@@ -61,9 +68,11 @@ while True:  #  수로 이로어진 위치데이터를 글자로 변환합니다
     if order == 0: #  플레이어가 둘 곳을 입력합니다.
         while True:
             try:
-                decision = int(input('어느 곳에 둘까요?(1~9)>>>')) -1
+                decision = int(input('어느 곳에 둘까요?(1~9)>>>').replace('.0', '')) -1
 
                 if listnum[decision] == 0:
+                    if decision < 0 or decision > 10:
+                        raise(ZeroDivisionError)
                     listnum[decision] = plr
                     cls()
                     order = 1
@@ -82,51 +91,77 @@ while True:  #  수로 이로어진 위치데이터를 글자로 변환합니다
             decision = randint(1, 9) -1
 
             if AI == 1:
-                placeimportance = [1, 1, 1, 1, 2, 1, 1, 1, 1] #  중요도 리스트
-
-                for i in range(9): #  이미 설치된 자리의 중요도 제거
-                    if listnum[i] == 0 or listnum[i] == -1:
-                        placeimportance[i] = 0
+                placeimportance = [1, 1, 1, 1, 1, 1, 1, 1, 1] #  중요도 리스트
 
                 if horizontal1 == plr*2 or horizontal1 == opp*2: #  상대의 우승 방해 또는 자신의 우승 확정
-                    for x in range(0, 2):
-                        if listnum[x] == 0:
+                    for x in range(0, 3):
+                        if listnum[x] == 0 and horizontal1 == plr*2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
 
                 elif horizontal2 == plr*2 or horizontal2 == opp*2:
-                    for x in range(3, 5):
-                        if listnum[x] == 0:
+                    for x in range(3, 6):
+                        if listnum[x] == 0 and horizontal2 == plr * 2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
 
                 elif horizontal3 == plr*2 or horizontal3 == opp*2:
-                    for x in range(6, 8):
-                        if listnum[x] == 0:
+                    for x in range(6, 9):
+                        if listnum[x] == 0 and horizontal3 == plr * 2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
 
                 elif longitude1 == plr * 2 or longitude1 == opp * 2:
-                    for x in range(0, 6, 3):
-                        if listnum[x] == 0:
+                    for x in range(0, 7, 3):
+                        if listnum[x] == 0 and longitude1 == plr * 2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
 
                 elif longitude2 == plr * 2 or longitude2 == opp * 2:
-                    for x in range(1, 7, 3):
-                        if listnum[x] == 0:
+                    for x in range(1, 8, 3):
+                        if listnum[x] == 0 and longitude2 == plr * 2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
 
                 elif longitude3 == plr * 2 or longitude3 == opp * 2:
-                    for x in range(2, 8, 3):
-                        if listnum[x] == 0:
+                    for x in range(2, 9, 3):
+                        if listnum[x] == 0 and longitude3 == plr * 2:
                             placeimportance[x] = 3
 
-                elif diagonal1 == plr * 2 or diagonal1 == opp * 2:
-                    for x in range(1, 8, 4):
-                        if listnum[x] == 0:
-                            placeimportance[x] = 3
+                        else:
+                            placeimportance[x] = 4
 
                 elif diagonal1 == plr * 2 or diagonal1 == opp * 2:
-                    for x in range(2, 6, 2):
-                        if listnum[x] == 0:
+                    for x in range(1, 9, 4):
+                        if listnum[x] == 0 and diagonal1 == plr * 2:
                             placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
+
+                elif diagonal2 == plr * 2 or diagonal2 == opp * 2:
+                    for x in range(2, 7, 2):
+                        if listnum[x] == 0 and diagonal2 == plr * 2:
+                            placeimportance[x] = 3
+
+                        else:
+                            placeimportance[x] = 4
+
+                for i in range(9): #  이미 설치된 자리의 중요도 제거
+                    if listnum[i] == 1 or listnum[i] == -1:
+                        placeimportance[i] = 0
+
+                print(placeimportance)
 
                 highimportance = 0  #  가장 높은 정확도를 산출
                 for i in range(8):
@@ -134,16 +169,19 @@ while True:  #  수로 이로어진 위치데이터를 글자로 변환합니다
                         highimportance = placeimportance[i]
                 print('최고 중요도' + str(highimportance))
 
+
                 decisionlist = [] #  가능하면서 가장 중요한 동작을 산출
-                for i in range(8):
+                for i in range(9):
                     if placeimportance[i] == highimportance:
                         decisionlist.append(i)
 
+                print(decisionlist)
 
                 decisionlistlenght = len(decisionlist) #  동작 중 하나를 선택
                 chooser = randint(1, decisionlistlenght) -1
                 decision = decisionlist[chooser]
             print('결론' + str(decision))
+
 
             if listnum[decision] == 0:
                 listnum[decision] = opp
