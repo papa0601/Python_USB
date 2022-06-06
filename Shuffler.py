@@ -6,7 +6,7 @@ def cls():
 
     system('cls')
 
-time = 1
+time = 0.5
 
 errcode = ''
 while True:
@@ -128,11 +128,12 @@ while True:
 comparetime = 0
 exchangetime = 0
 repeat = len(list) - 1
+attempt = 0
 
 if task == 1:
     while True:
-        refresh = 0
-        for i in range(repeat):
+        for i in range(repeat - attempt):
+
             for x in range(len(list)):
                 if x == i:
                     print( '    >[' + str(list[x]) + ']', end='')
@@ -162,7 +163,6 @@ if task == 1:
                     list[i + 1] = small
                     comparetime += 1
                     exchangetime += 1
-                    refresh += 1
 
 
             else:
@@ -174,7 +174,6 @@ if task == 1:
                     list[i + 1] = big
                     comparetime += 1
                     exchangetime += 1
-                    refresh += 1
 
                 else:
                     comparetime += 1
@@ -182,12 +181,85 @@ if task == 1:
             print('')
             sleep(time)
             cls()
-        if refresh == 0:
-            comparetime -= (len(list) - 1)
+
+        if repeat - attempt == 0:
             break
 
+
+        attempt += 1
+
+
 elif task == 2:
-    pass
+    for i in range(len(list) - 1): #박스를 설정하는 거라고 보셈 한마디로 처음에 최솟값을 제공하는 칸이다 이말이야 /  이녀석은 리스트의 길이 - 1만큼 반복해야지 왜냐하면 마지막 칸은 선택할 필요가 없으니까
+        min = list[i] #일단 비교대상 1순위 (첫번째 칸)에 있는 녀석을 최솟값으로 둬야지
+        minloca = i
+
+        for k in range(len(list) - i - 1): #이 친구는 최솟값과 다른 값들을 비교를 하겠지? 그 때 몇 번째 칸과 비교를 할지 정해주는 녀석이야 / 이녀석은 리스트의 길이 - i를 해야해 i가 밀리면 얘도 밀리니까
+            for x in range(len(list)):
+                if x == i:
+                    print('/[', list[x], ']/', end=' ')
+
+                elif x == k + i + 1 or x == minloca:
+                    print('>[', list[x], ']<', end=' ')
+
+                else:
+                    print('[', list[x], ']', end=' ')
+            print('')
+            print('\n')
+            print('비교 횟수: ' + str(comparetime) + ' / 교환 횟수: ' + str(exchangetime))
+            print('\n')
+            if list[k + i + 1] < min:
+                print('최솟값: ', min, ' > 비굣값', list[k + i + 1], ' >>> 최솟값을 변경!')
+                min = list[k + i + 1]
+                minloca = k + i + 1
+                comparetime += 1
+
+            elif list[k + i + 1] >= min:
+                print('최솟값: ', min, ' ≤ 비굣값', list[k + i + 1], ' >>> 최솟값을 유지')
+                comparetime += 1
+
+            sleep(0.5)
+            cls()
+
+        for x in range(len(list)):
+            if x == i:
+                print('/[', list[x], ']/', end=' ')
+
+            elif x == minloca:
+                print('>[', list[x], ']<', end=' ')
+
+            else:
+                print('[', list[x], ']', end=' ')
+
+        print('')
+        print('\n')
+        print('비교 횟수: ' + str(comparetime) + ' / 교환 횟수: ' + str(exchangetime))
+        print('\n')
+        if min != list[i]: # 이 알고리즘으로 가장 작은 놈이랑 가장 큰 놈을 바꾸는 거야
+            big = list[i]
+            small = list[minloca]
+            print(list[i], '(와)과 ', min, '의 위치를 바꾼다!')
+            list[i] = small
+            list[minloca] = big
+            exchangetime += 1
+
+        else:
+            print('바꿀 필요가 없다')
+
+
+
+        sleep(time)
+        cls()
+
+
+
+
+
+
+
+
+
+
 
 elif task == 3:
     pass
